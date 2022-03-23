@@ -14,7 +14,7 @@ resource "digitalocean_droplet" "k3s_server" {
     k3s_token       = random_password.k3s_token.result
     flannel_backend = var.flannel_backend
     k3s_lb_ip       = digitalocean_loadbalancer.k3s_lb.ip
-    db_cluster_uri  = local.db_cluster_uri
+    server_ip  = digitalocean_droplet.k3s_server_init.ip
     critical_taint  = local.taint_critical
   })
   depends_on = [
