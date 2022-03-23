@@ -18,7 +18,6 @@ resource "digitalocean_droplet" "k3s_server_init" {
     do_ccm_fw_tags        = local.ccm_fw_tags
     flannel_backend       = var.flannel_backend
     k3s_lb_ip             = digitalocean_loadbalancer.k3s_lb.ip
-    db_cluster_uri        = local.db_cluster_uri
     critical_taint        = local.taint_critical
     ccm_manifest          = base64gzip(file("${path.module}/manifests/do-ccm.yaml"))
     csi_crds_manifest     = base64gzip(file("${path.module}/manifests/do-csi/crds.yaml"))
