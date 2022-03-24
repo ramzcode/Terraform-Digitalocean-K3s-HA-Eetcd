@@ -33,6 +33,15 @@ resource "digitalocean_droplet" "k3s_server_init" {
     cert_manager     = var.cert_manager == true ? local.install_cert_manager : ""
     sys_upgrade_ctrl = var.sys_upgrade_ctrl == true ? base64gzip(file("${path.module}/manifests/system-upgrade-controller.yaml")) : ""
   })
+  depends_on = [
+    time_sleep.wait_for_k3s_lb
+  ]
+}
+
+resource "time_sleep" "wait_for_server" {
+  create_duration = "180s"
+
+  depends_on = [digitalocean_droplet.k3s_server_init]
 }
 
 resource "digitalocean_project_resources" "k3s_init_server_node" {

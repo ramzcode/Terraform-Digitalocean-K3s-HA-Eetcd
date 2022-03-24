@@ -13,7 +13,11 @@ resource "digitalocean_droplet" "k3s_agent" {
     k3s_channel = var.k3s_channel
     k3s_token   = random_password.k3s_token.result
     k3s_lb_ip   = digitalocean_loadbalancer.k3s_lb.ip
+    server_ip  = digitalocean_droplet.k3s_server_init[0].ipv4_address_private
   })
+  depends_on = [
+    time_sleep.wait_for_server
+  ]
 }
 
 resource "digitalocean_project_resources" "k3s_agent_nodes" {

@@ -20,6 +20,12 @@ resource "digitalocean_loadbalancer" "k3s_lb" {
   droplet_tag = local.server_droplet_tag
 }
 
+resource "time_sleep" "wait_for_k3s_lb" {
+  create_duration = "180s"
+
+  depends_on = [digitalocean_loadbalancer.k3s_lb]
+}
+
 resource "digitalocean_project_resources" "k3s_api_server_lb" {
   project = digitalocean_project.k3s_cluster.id
   resources = [

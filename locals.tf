@@ -1,6 +1,7 @@
 locals {
   server_droplet_tag = "k3s_server"
   agent_droplet_tag  = "k3s_agent"
+  primary_master_tag = "primary"
   ccm_fw_tags        = var.server_taint_criticalonly == false ? join(",", [local.server_droplet_tag, local.agent_droplet_tag]) : local.agent_droplet_tag
 
   critical_addons_only_true = "--node-taint \"CriticalAddonsOnly=true:NoExecute\" \\"

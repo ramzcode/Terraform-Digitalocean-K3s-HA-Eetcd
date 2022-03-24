@@ -15,21 +15,21 @@ resource "digitalocean_firewall" "k3s_firewall" {
   inbound_rule {
     # Allow ICMP communication on all ports to defined 'tags' via VPC Network
     protocol         = "icmp"
-    source_addresses = [var.vpc_network_range]
+    source_addresses = ["10.10.0.0/16"]
   }
 
   inbound_rule {
     # Allow TCP communication on all ports to defined 'tags' via VPC Network
     protocol         = "tcp"
     port_range       = "1-65535"
-    source_addresses = [var.vpc_network_range]
+    source_addresses = ["10.10.0.0/16"]
   }
 
   inbound_rule {
     # Allow UDP communication on all ports to defined 'tags' via VPC Network
     protocol         = "udp"
     port_range       = "1-65535"
-    source_addresses = [var.vpc_network_range]
+    source_addresses = ["10.10.0.0/16"]
   }
 
   inbound_rule {
@@ -50,4 +50,10 @@ resource "digitalocean_firewall" "k3s_firewall" {
     port_range            = "1-65535"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
 }
