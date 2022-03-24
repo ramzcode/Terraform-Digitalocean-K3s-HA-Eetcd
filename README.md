@@ -1,25 +1,24 @@
-# Terraform DigitalOcean HA K3S Module
+# Terraform DigitalOcean HA K3S with Embedded Etcd datastore Module
 An opinionated Terraform module to provision a high availability [K3s](https://k3s.io/) cluster with external database on the DigitalOcean cloud platform. Perfect for development or testing.
 
-![2021-10-24 05_45_35-k3s-cluster_project_DigitalOcean](https://user-images.githubusercontent.com/12916656/138615757-c73b90bc-9fe7-4214-90c7-acfad2f49222.png)
+![DC_CP](example/../examples/DO_CP.png)
 
 <!-- ![k3s_on_digitalocean_term_demo](examples/ha-k3s-do-demo.svg) -->
 
 ## Features
 * [x] High Availability K3s Cluster provisioned on the DigitalOcean platform
-* [x] Managed **PostgreSQL**/**MySQL** database provisioned. Serves as the datastore for the cluster's state (configurable options: size & node count)
-* [x] Dedicated VPC provisioned for cluster use (IP Range: `10.10.10.0/24`)
+* [x] Embedded Etcd datastore, no external DB is required.
+* [x] Dedicated VPC provisioned for cluster use (IP Range: `10.10.10.0/24`), can be configured.
 * [x] Number of provisioned Servers (Masters) and Agents (Workers) is configurable
 * [x] Cluster API/Server(s) are behind a provisioned load balancer for high availability
 * [x] All resources assigned to a dedicated DigitalOcean project (expect Load Balancers provisioned by app deployments)
 * [x] Flannel backend is configurable. Choose from `vxlan` (default), `ipsec` or `wireguard`
 * [x] DigitalOcean's CCM ([Cloud Controller Manager](https://github.com/digitalocean/digitalocean-cloud-controller-manager)) and CSI ([Container Storage Interface](https://github.com/digitalocean/csi-digitalocean)) plugins are pre-installed. Enables the cluster to leverage DigitalOcean's load balancer and volume resources
 * [x] Option to make Servers (Masters) schedulable. Default is `false` i.e. `CriticalAddonsOnly=true:NoExecute`
-* [x] Cluster database engine is configurable. Choose between **PostgreSQL** (v11, default) or **MySQL** (v8)
 * [x] Deploy [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller) to manage [automated upgrades](https://rancher.com/docs/k3s/latest/en/upgrades/automated/) of the cluster [default: `false`]
 * [x] Deploy the [Kubernetes Dashboard](https://github.com/kubernetes/dashboard) [default: `false`]
 * [x] Deploy Jetstack's [cert-manager](https://github.com/jetstack/cert-manager) [default: `false`]
-* [x] Firewalled Nodes & Database
+* [x] Firewalled and Loadbalanced Nodes
 * [x] Deploy an ingress controller from **Kong** (Postgres or [DB-less mode](https://docs.konghq.com/gateway-oss/2.6.x/db-less-and-declarative-config/)), **Nginx** or **Traefik v2** [default: `none`]
 * [ ] Generate custom `kubeconfig` file (optional)
 
@@ -30,13 +29,13 @@ An opinionated Terraform module to provision a high availability [K3s](https://k
 
 ## Tutorial
 
-[Deploy a HA K3s Cluster on DigitalOcean in 10 minutes using Terraform](https://colinwilson.uk/2021/04/04/deploy-a-ha-k3s-cluster-on-digitalocean-in-10-minutes-using-terraform/)
+Please check the example folder for a quick deployment.
 
 ## Architecture
 
 A default deployment of this module provisions an architecture similar to that illustrated below (minus the external traffic Load Balancer). **2x** Servers, **1x** Agent and a load balancer in front of the servers providing a fixed registration address for the Kubernetes API. Additional Servers or Agents can be provisioned via the `server_count` and `agent_count` variables respectively.
 
-![](https://res.cloudinary.com/qunux/image/upload/v1618680903/k3s-architecture-ha-server_border_rjwhll.png)
+![Arch](examples/Arch.png)
 
 ###### *K3s Architecture with a High-availability Servers - [Source](https://rancher.com/docs/k3s/latest/en/architecture/#high-availability-k3s-server-with-an-external-db)*
 
@@ -173,19 +172,11 @@ http://localhost:9000/dashboard/
 > Don't forget the trailing slash
 
 ## Cost
-
-A default deployment of this module provisions the following resources:
-
-| Quantity | Resource | Description | Price/mo ($USD)* | Total/mo ($USD) | Total/hr ($USD) |
-|------|-------------|:----:|:-----:|:-----:|:-----:|
-| **2x** | Server (Master) Node | 1 VPCU, 2GB RAM, 2TB Transfer | 10 | **20** | **0.030** |
-| **1x** | Agent (Worker) Node | 1 VPCU, 2GB RAM, 2TB Transfer | 10 | **10** | **0.015** |
-| **1x** | Load Balancer | Small  | 10 | **10** | **0.01488** |
-| **1x** | Postgres DB Cluster | Single Basic Node | 15 | **15** | **0.022** |
-|  |  |  | **Total** | **55** | ≈ **0.082** |
-##### * Prices correct at time of latest commit. Check [digitalocean.com/pricing](https://www.digitalocean.com/pricing/) for current pricing.
-##### **N.B.** Additional costs may be incurred through the provisioning of volumes and/or load balancers required by any applications deployed to the cluster.
+Mostly will be lesser than other top CP's
 
 ## Credits
 
 * [Set up Your K3s Cluster for High Availability on DigitalOcean](https://rancher.com/blog/2020/k3s-high-availability) - Blog post by [Alex Ellis](https://github.com/alexellis) on rancher.com
+* [terraform-digitalocean-ha-k3s](https://github.com/aigisuk/terraform-digitalocean-ha-k3s) - Repo by [AIGIS](https://github.com/aigisuk) on github.com
+* Linus Torvalds
+* Open Source Contributors and the wonderful community
