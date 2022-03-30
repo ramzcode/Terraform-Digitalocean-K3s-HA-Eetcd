@@ -39,7 +39,7 @@ resource "digitalocean_droplet" "k3s_server_init" {
 }
 
 resource "time_sleep" "wait_for_server" {
-  create_duration = "180s"
+  create_duration = "60s"
 
   depends_on = [digitalocean_droplet.k3s_server_init]
 }

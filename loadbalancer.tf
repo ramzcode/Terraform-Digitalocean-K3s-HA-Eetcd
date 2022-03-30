@@ -21,7 +21,7 @@ resource "digitalocean_loadbalancer" "k3s_lb" {
 }
 
 resource "time_sleep" "wait_for_k3s_lb" {
-  create_duration = "180s"
+  create_duration = "60s"
 
   depends_on = [digitalocean_loadbalancer.k3s_lb]
 }
