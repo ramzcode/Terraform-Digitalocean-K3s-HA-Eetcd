@@ -19,6 +19,6 @@ module "ha-k3s" {
   region = "blr1"
   k3s_channel = "v1.22.3+k3s1"
   server_count = "3"
-  agent_count = "2"
+  agent_count = "3"
   sys_upgrade_ctrl = "true"
 }
